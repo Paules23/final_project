@@ -3,6 +3,7 @@ import 'package:final_project/models/game_model.dart';
 import 'package:final_project/services/steam_api_service.dart';
 import 'package:final_project/widgets/game_tile.dart';
 import 'package:final_project/widgets/bottom_navigation_bar.dart';
+import 'package:final_project/widgets/rounded_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -39,6 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          RoundedBar(
+            buttonTitles: ['GAMES', 'REVIEWS', 'LISTS'],
+            onPressed: (index) {},
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
