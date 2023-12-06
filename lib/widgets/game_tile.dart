@@ -8,34 +8,20 @@ class GameTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(
-                game.imageUrl, // URL de la imagen del juego obtenida de la API
-                width: 100,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
+    return ListTile(
+      leading: game.imageUrl.isNotEmpty
+          ? Image.network(
+              game.imageUrl,
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            )
+          : Placeholder(
+              fallbackWidth: 100,
+              fallbackHeight: 100,
             ),
-            SizedBox(height: 8.0),
-            Text(
-              game.title, // Título del juego obtenido de la API
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Release Date: ${game.releaseDate}', // Fecha de lanzamiento del juego obtenida de la API
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
+      title: Text(game.title),
+      subtitle: Text('Release Date: ${game.releaseDate}'),
     );
   }
 }

@@ -11,24 +11,44 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final SteamApiService steamApiService = SteamApiService();
+  final String steamApiKey = '37D9C03B00BDCD0B8CE03351101779AF';
+  late SteamApiService steamApiService;
   List<GameModel> games = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchLatestReleases();
+    steamApiService = SteamApiService(steamApiKey);
+    _fetchGamesAndImages();
   }
 
-  Future<void> _fetchLatestReleases() async {
+  Future<void> _fetchGamesAndImages() async {
     try {
-      List<GameModel> latestGames = await steamApiService.getLatestReleases();
+      List<int> gameIds = await steamApiService.getGameIdsOfFeaturedGames();
+      List<GameModel> gamesWithImages = await _getGamesWithImages(gameIds);
       setState(() {
-        games = latestGames;
+        games = gamesWithImages;
       });
     } catch (e) {
-      print('Error al obtener los últimos juegos: $e');
+      print('Error al obtener juegos e imágenes: $e');
     }
+  }
+
+  Future<List<GameModel>> _getGamesWithImages(List<int> gameIds) async {
+    List<GameModel> gamesList = [];
+
+    for (int gameId in gameIds) {
+      final String imageUrl =
+          'https://cdn.cloudflare.steamstatic.com/steam/apps/$gameId/capsule_184x69.jpg';
+      final GameModel game = GameModel(
+        title: 'Nombre del juego',
+        imageUrl: imageUrl,
+        releaseDate: 'Fecha de lanzamiento',
+      );
+      gamesList.add(game);
+    }
+
+    return gamesList;
   }
 
   @override
