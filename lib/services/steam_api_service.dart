@@ -1,34 +1,82 @@
-import 'dart:convert';
+// api_service.dart
+
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class SteamApiService {
-  final String apiKey;
+class ApiService {
+  static Future<List<dynamic>> fetchSteamGames() async {
+    final apiKey = '37D9C03B00BDCD0B8CE03351101779AF';
+    final steamApiEndpoint =
+        'https://api.steampowered.com/ISteamApps/GetAppList/v2/?key=$apiKey';
 
-  SteamApiService(this.apiKey);
+    final response = await http.get(Uri.parse(steamApiEndpoint));
 
-  Future<List<int>> getGameIdsOfFeaturedGames() async {
-    final String url =
-        'https://api.steampowered.com/ISteamApps/GetStoreFeatured/v1/?key=$apiKey';
-
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final List<int> gameIds = [];
-        final Map<String, dynamic> data = jsonDecode(response.body);
-
-        if (data.containsKey('featured_win')) {
-          final List<dynamic> featuredGames = data['featured_win'];
-          for (var gameData in featuredGames) {
-            final int gameId = gameData['id'] ?? 0;
-            gameIds.add(gameId);
-          }
-        }
-        return gameIds;
-      } else {
-        throw Exception('Error al cargar los juegos destacados');
-      }
-    } catch (e) {
-      throw Exception('Error: $e');
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      return data['applist']['apps'];
+    } else {
+      throw Exception('Failed to load game list');
     }
   }
+
+  static Future<GameDetails> fetchGameDetails(int gameId) async {
+    final apiKey = '37D9C03B00BDCD0B8CE03351101779AF';
+    final gameInfoEndpoint =
+        'https://store.steampowered.com/api/appdetails?appids=$gameId&key=$apiKey';
+
+    final response = await http.get(Uri.parse(gameInfoEndpoint));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (data['$gameId']['success']) {
+        final gameData = data['$gameId']['data'];
+
+        return GameDetails(
+          title: gameData['name'] ?? 'Title not available',
+          description:
+              gameData['short_description'] ?? 'Description not available',
+          price: gameData['price_overview']['final_formatted'] ??
+              'Price not available',
+          genre: _getGenres(gameData['genres']) ?? 'Genre not available',
+          developer:
+              gameData['developers']?.join(', ') ?? 'Developer not available',
+          publisher:
+              gameData['publishers']?.join(', ') ?? 'Publisher not available',
+          imageUrl: gameData['header_image'] ?? '',
+        );
+      } else {
+        throw Exception('Failed to load game details');
+      }
+    } else {
+      throw Exception('Failed to load game details');
+    }
+  }
+
+  static String _getGenres(List<dynamic>? genres) {
+    if (genres != null && genres.isNotEmpty) {
+      final genreList = genres.map((genre) => genre['description']).toList();
+      return genreList.join(', ');
+    }
+    return '';
+  }
+}
+
+class GameDetails {
+  final String title;
+  final String description;
+  final String price;
+  final String genre;
+  final String developer;
+  final String publisher;
+  final String imageUrl;
+
+  GameDetails({
+    required this.title,
+    required this.description,
+    required this.price,
+    required this.genre,
+    required this.developer,
+    required this.publisher,
+    required this.imageUrl,
+  });
 }
