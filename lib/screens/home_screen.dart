@@ -91,9 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildGameItem(GameDetails gameDetails) {
     return GestureDetector(
       onTap: () {
-        // Perform actions when the image is tapped
-        // For example, navigate to a new screen or perform some action
-        // Here, we'll just print a message to the console
         if (kDebugMode) {
           print('Image tapped for ${gameDetails.title}');
         }
