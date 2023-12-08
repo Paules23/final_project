@@ -2,6 +2,7 @@
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:final_project/models/game_model.dart';
 
 class ApiService {
   static Future<List<dynamic>> fetchSteamGames() async {
@@ -59,24 +60,4 @@ class ApiService {
     }
     return '';
   }
-}
-
-class GameDetails {
-  final String title;
-  final String description;
-  final String price;
-  final String genre;
-  final String developer;
-  final String publisher;
-  final String imageUrl;
-
-  GameDetails({
-    required this.title,
-    required this.description,
-    required this.price,
-    required this.genre,
-    required this.developer,
-    required this.publisher,
-    required this.imageUrl,
-  });
 }

@@ -4,7 +4,6 @@ import 'package:final_project/services/steam_api_service.dart';
 import 'package:final_project/widgets/game_tile.dart';
 import 'package:final_project/widgets/bottom_navigation_bar.dart';
 import 'package:final_project/widgets/rounded_bar.dart';
-import 'package:flutter/foundation.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -70,9 +69,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Center(child: Text('No games available'));
                 } else {
                   return ListView.builder(
+                    scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      return _buildGameItem(snapshot.data![index]);
+                      return Row(
+                        children: [
+                          GameItemWidget(snapshot.data![index]),
+                          SizedBox(width: 16),
+                        ],
+                      );
                     },
                   );
                 }
@@ -84,38 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: 0,
         onTap: (index) {},
-      ),
-    );
-  }
-
-  Widget _buildGameItem(GameDetails gameDetails) {
-    return GestureDetector(
-      onTap: () {
-        if (kDebugMode) {
-          print('Image tapped for ${gameDetails.title}');
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              gameDetails.imageUrl,
-              height: 100,
-              width: 100,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Title: ${gameDetails.title}',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text('Developer: ${gameDetails.developer}'),
-            Text('Price: ${gameDetails.price}'),
-            Text('Genre: ${gameDetails.genre}')
-          ],
-        ),
       ),
     );
   }

@@ -1,27 +1,19 @@
-class GameModel {
+class GameDetails {
   final String title;
+  final String description;
+  final String price;
+  final String genre;
+  final String developer;
+  final String publisher;
   final String imageUrl;
-  final String releaseDate;
 
-  GameModel({
+  GameDetails({
     required this.title,
+    required this.description,
+    required this.price,
+    required this.genre,
+    required this.developer,
+    required this.publisher,
     required this.imageUrl,
-    required this.releaseDate,
   });
-
-  factory GameModel.fromJson(Map<String, dynamic> json) {
-    return GameModel(
-      title: json['title'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
-      releaseDate: json['releaseDate'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'imageUrl': imageUrl,
-      'releaseDate': releaseDate,
-    };
-  }
 }
