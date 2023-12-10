@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class RoundedBar extends StatelessWidget {
@@ -13,9 +15,9 @@ class RoundedBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 6.0),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 248, 161, 0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 248, 161, 0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -29,19 +31,19 @@ class RoundedBar extends StatelessWidget {
                     onPressed(index);
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 255, 188, 72),
+                    primary: const Color.fromARGB(255, 255, 188, 72),
                     onPrimary: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
-                      side: BorderSide(
-                          color: const Color.fromARGB(255, 248, 171, 37)),
+                      side: const BorderSide(
+                          color: Color.fromARGB(255, 248, 171, 37)),
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 36.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 36.0, vertical: 12.0),
                   ),
                   child: Text(
                     title,
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   ),
                 ),
               ),
