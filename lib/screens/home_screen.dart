@@ -21,6 +21,21 @@ class _HomeScreenState extends State<HomeScreen>
   List<int> appIds = [
     1245620,
     367520,
+    814380,
+    620,
+    774361,
+    1868140,
+    1086940,
+    219150,
+    1307580,
+    413150,
+    391540,
+    239030,
+    656350,
+    1497440,
+    368010,
+    108600,
+    739630,
   ];
 
   late Future<List<GameDetails>> _gamesDetails;

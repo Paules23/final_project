@@ -25,14 +25,14 @@ class GameItemWidget extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        const SizedBox(height: 8), // Separation between image and details
-        Text(
+        const SizedBox(height: 8),
+        /* Text(
           'Title: ${gameDetails.title}',
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Text('Developer: ${gameDetails.developer}'),
         Text('Price: ${gameDetails.price}'),
-        Text('Genre: ${gameDetails.genre}'),
+        Text('Genre: ${gameDetails.genre}'),*/
       ],
     );
   }
