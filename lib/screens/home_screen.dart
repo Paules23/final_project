@@ -6,6 +6,8 @@ import 'package:final_project/widgets/rounded_bar.dart';
 import 'package:final_project/widgets/games_tab.dart';
 import 'package:final_project/widgets/reviews_tab.dart';
 import 'package:final_project/widgets/lists_tab.dart';
+import 'package:final_project/screens/search_screen.dart';
+import 'package:final_project/screens/collection_screen.dart';
 import 'package:flutter/foundation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  int _currentIndex = 0;
   List<int> appIds = [
     1245620,
     367520,
@@ -44,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   late TabController _tabController;
 
+  late List<Widget> _screens;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +57,13 @@ class _HomeScreenState extends State<HomeScreen>
     _lists = _fetchLists();
 
     _tabController = TabController(length: 3, vsync: this);
+
+    _screens = [
+      // The HomeScreen content which includes the internal tabs for Games, Reviews, and Lists
+      buildHomeScreenContent(),
+      const SearchScreen(), // Assuming SearchScreen is implemented
+      const CollectionScreen(), // Assuming CollectionScreen is implemented
+    ];
   }
 
   Future<List<GameDetails>> _fetchGameDetailsList() async {
@@ -77,8 +89,7 @@ class _HomeScreenState extends State<HomeScreen>
     return [];
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildHomeScreenContent() {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -102,10 +113,44 @@ class _HomeScreenState extends State<HomeScreen>
             ListsTab(_lists),
           ],
         ),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: 0,
-          onTap: (index) {},
-        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Use a Scaffold with an IndexedStack for the body
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+            // If you have internal tabs in HomeScreen, you may want to reset them to the first tab
+            // when navigating away from HomeScreen
+            if (_currentIndex != 0) {
+              _tabController.index = 0;
+            }
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.collections),
+            label: 'Collection',
+          ),
+        ],
       ),
     );
   }
