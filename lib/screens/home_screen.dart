@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/services/steam_api_service.dart';
-import 'package:final_project/widgets/bottom_navigation_bar.dart';
 import 'package:final_project/widgets/rounded_bar.dart';
-import 'package:final_project/widgets/games_tab.dart';
-import 'package:final_project/widgets/reviews_tab.dart';
-import 'package:final_project/widgets/lists_tab.dart';
+import 'package:final_project/screens/tabs/games_tab.dart';
+import 'package:final_project/screens/tabs/reviews_tab.dart';
+import 'package:final_project/screens/tabs/lists_tab.dart';
 import 'package:final_project/screens/search_screen.dart';
 import 'package:final_project/screens/collection_screen.dart';
 import 'package:flutter/foundation.dart';
