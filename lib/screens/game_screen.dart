@@ -1,5 +1,9 @@
+// File: /lib/screens/game_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:final_project/models/game_model.dart';
+import 'package:final_project/utils/favorites_provider.dart'; // Import the FavoritesProvider
 
 class GameScreen extends StatelessWidget {
   final GameDetails gameDetails;
@@ -8,6 +12,10 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Accessing the FavoritesProvider to check if the current game is favorite
+    var isFavorite =
+        Provider.of<FavoritesProvider>(context).isFavorite(gameDetails.id);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(gameDetails.title), // Game title
@@ -32,19 +40,22 @@ class GameScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // Rating stars would go here
-                  // You can use a package like flutter_rating_bar to create interactive stars
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(gameDetails.description),
-                  ),
-                  // Here, implement the carousel for screenshots using a horizontal ListView.builder
+                  // ... [other widgets like rating stars and carousel]
                 ],
               ),
             ),
-            // Action buttons would go here
+            // ... [other widgets like action buttons]
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Toggle the favorite status for the current game
+          Provider.of<FavoritesProvider>(context, listen: false)
+              .toggleFavorite(gameDetails.id);
+        },
+        child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+        backgroundColor: isFavorite ? Colors.red : Colors.grey,
       ),
     );
   }

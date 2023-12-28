@@ -31,6 +31,7 @@ class ApiService {
         final gameData = data['$gameId']['data'];
 
         return GameDetails(
+          id: gameData['steam_appid'],
           title: gameData['name'] ?? 'Title not available',
           description:
               gameData['short_description'] ?? 'Description not available',
@@ -85,6 +86,7 @@ class ApiService {
       // The structure of the JSON response might be different so adjust accordingly
       for (var item in jsonResponse['featured_win']) {
         final gameDetails = GameDetails(
+          id: item['steam_appid'].toString(), // Convert the ID to a string
           title: item['name'] ?? 'No title',
           description: item['short_description'] ?? 'No description',
           price: item['price'] ?? 'No price',

@@ -1,4 +1,5 @@
 class GameDetails {
+  final String id;
   final String title;
   final String description;
   final String price;
@@ -8,6 +9,7 @@ class GameDetails {
   final String imageUrl;
 
   GameDetails({
+    required this.id,
     required this.title,
     required this.description,
     required this.price,
