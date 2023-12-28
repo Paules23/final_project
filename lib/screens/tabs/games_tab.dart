@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/widgets/game_tile.dart';
+import 'package:final_project/screens/game_screen.dart'; // Make sure to import the GameScreen
 
 class GamesTab extends StatelessWidget {
   final Future<List<GameDetails>> gamesDetails;
@@ -21,13 +22,26 @@ class GamesTab extends StatelessWidget {
         } else {
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // Display 3 items in each row
-              crossAxisSpacing: 8.0, // Spacing between items horizontally
-              mainAxisSpacing: 8.0, // Spacing between rows vertically
+              crossAxisCount: 3,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
             ),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return GameItemWidget(snapshot.data![index]);
+              // Wrap the GameItemWidget with InkWell
+              return InkWell(
+                onTap: () {
+                  // Push GameScreen when tapped
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          GameScreen(gameDetails: snapshot.data![index]),
+                    ),
+                  );
+                },
+                child: GameItemWidget(snapshot.data![index]),
+              );
             },
           );
         }

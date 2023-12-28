@@ -1,7 +1,8 @@
-// search_screen.dart
 import 'package:flutter/material.dart';
 import 'package:final_project/services/steam_api_service.dart';
 import 'package:final_project/models/game_model.dart';
+import 'package:final_project/screens/game_screen.dart';
+import 'dart:async';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   Future<List<GameDetails>>? _featuredGames;
   String _searchQuery = '';
+  bool _isSearching = false;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -22,18 +25,45 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _searchGame(String gameName) async {
+    if (gameName.isEmpty) {
+      setState(() {
+        _featuredGames = ApiService.fetchFeaturedGames();
+        _isSearching = false; // Set to false when not searching
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearching = true; // Set to true when search begins
+    });
+
     try {
       final details = await ApiService.getGameDetailsByName(gameName);
       setState(() {
         _featuredGames = Future.value(details == null ? [] : [details]);
+        _isSearching = false; // Set to false when search ends
       });
     } catch (e) {
       // Handle error
       print("Error searching for game: $e");
       setState(() {
         _featuredGames = Future.value([]);
+        _isSearching = false; // Set to false on error
       });
     }
+  }
+
+  void _onSearchChanged(String gameName) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _searchGame(gameName);
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 
   @override
@@ -53,25 +83,21 @@ class _SearchScreenState extends State<SearchScreen> {
               setState(() {
                 _searchQuery = value;
               });
-              if (_searchQuery.isNotEmpty) {
-                _searchGame(_searchQuery);
-              } else {
-                // If the search query is empty, fetch the featured games again
-                _featuredGames = ApiService.fetchFeaturedGames();
-              }
+              _onSearchChanged(value);
             },
           ),
           Expanded(
             child: FutureBuilder<List<GameDetails>>(
               future: _featuredGames,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    _isSearching) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 } else if (snapshot.hasData) {
                   List<GameDetails> games = snapshot.data ?? [];
-                  if (games.isEmpty) {
+                  if (games.isEmpty && !_isSearching) {
                     return const Center(child: Text("No games found."));
                   }
                   return ListView.builder(
@@ -82,7 +108,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         title: Text(game.title),
                         leading: Image.network(game.imageUrl),
                         onTap: () {
-                          // Navigate to a detailed screen for the game
+                          // Navigate to the detailed screen for the game
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  GameScreen(gameDetails: game),
+                            ),
+                          );
                         },
                       );
                     },
