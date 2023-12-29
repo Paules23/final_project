@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/models/game_model.dart';
-import 'package:final_project/utils/favorites_provider.dart'; // Ensure this is the correct path
-import 'package:final_project/widgets/game_tile.dart';
+import 'package:final_project/utils/favorites_provider.dart';
 import 'package:final_project/services/steam_api_service.dart';
+import 'package:final_project/screens/game_screen.dart';
+import 'package:final_project/widgets/game_tile.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({Key? key}) : super(key: key);
@@ -13,72 +14,87 @@ class CollectionScreen extends StatefulWidget {
 }
 
 class _CollectionScreenState extends State<CollectionScreen> {
-  late Future<List<GameDetails>> _favoriteGamesDetails;
+  Map<int, GameDetails> _gameDetails = {};
 
   @override
   void initState() {
     super.initState();
-    // Load favorite games details
-    _favoriteGamesDetails = _loadFavoriteGames();
+
+    Provider.of<FavoritesProvider>(context, listen: false)
+        .addListener(_updateGameDetails);
+    _loadInitialFavoriteGames();
   }
 
-  Future<List<GameDetails>> _loadFavoriteGames() async {
-    // Get the list of favorite game IDs from the provider
+  void _loadInitialFavoriteGames() async {
     var favoritesProvider =
         Provider.of<FavoritesProvider>(context, listen: false);
-    await favoritesProvider.loadFavorites(); // Ensure favorites are loaded
-
-    List<GameDetails> details = [];
-    if (favoritesProvider.isError) {
-      // If there's an error loading favorites, throw an exception to be caught by FutureBuilder
-      throw Exception(favoritesProvider.errorMessage);
-    }
-
-    for (String id in favoritesProvider.favorites) {
-      try {
-        var gameDetails = await ApiService.fetchGameDetails(int.parse(id));
-        details.add(gameDetails);
-      } catch (e) {
-        // Handle errors or add logging here if needed
-        print('Failed to fetch game details for ID $id: $e');
-        // Optionally, continue loading other games even if one fails
+    for (int id in favoritesProvider.favorites) {
+      if (!_gameDetails.containsKey(id)) {
+        try {
+          var details = await ApiService.fetchGameDetails(id);
+          if (mounted) {
+            setState(() {
+              _gameDetails[id] = details;
+            });
+          }
+        } catch (e) {
+          print('Failed to load game details for ID $id: $e');
+        }
       }
     }
-    return details;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Games'),
-      ),
-      body: FutureBuilder<List<GameDetails>>(
-        future: _favoriteGamesDetails,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            // Use snapshot.error to display the error message
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No favorite games added.'));
-          } else {
-            return GridView.builder(
-              padding: EdgeInsets.all(8),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return GameItemWidget(snapshot.data![index]);
-              },
-            );
-          }
-        },
-      ),
-    );
+  void _updateGameDetails() {
+    var favoritesProvider =
+        Provider.of<FavoritesProvider>(context, listen: false);
+
+    _loadInitialFavoriteGames();
+
+    @override
+    void dispose() {
+      Provider.of<FavoritesProvider>(context, listen: false)
+          .removeListener(_updateGameDetails);
+      super.dispose();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      var favoritesProvider = Provider.of<FavoritesProvider>(context);
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('My Games Collection'),
+        ),
+        body: GridView.builder(
+          padding: EdgeInsets.all(8),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: favoritesProvider.favorites.length,
+          itemBuilder: (context, index) {
+            int id = favoritesProvider.favorites.elementAt(index);
+            GameDetails? details = _gameDetails[id];
+
+            if (details != null) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GameScreen(gameDetails: details),
+                    ),
+                  );
+                },
+                child: GameItemWidget(details),
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      );
+    }
   }
 }

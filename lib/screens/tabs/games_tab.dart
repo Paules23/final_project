@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/widgets/game_tile.dart';
-import 'package:final_project/screens/game_screen.dart'; // Make sure to import the GameScreen
+import 'package:final_project/screens/game_screen.dart';
 
 class GamesTab extends StatelessWidget {
   final Future<List<GameDetails>> gamesDetails;

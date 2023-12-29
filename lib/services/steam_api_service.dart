@@ -21,7 +21,7 @@ class ApiService {
 
   static Future<GameDetails> fetchGameDetails(int gameId) async {
     final gameInfoEndpoint =
-        'https://store.steampowered.com/api/appdetails?appids=$gameId&key=$apiKey';
+        'https://store.steampowered.com/api/appdetails?appids=${gameId.toString()}&key=$apiKey';
 
     final response = await http.get(Uri.parse(gameInfoEndpoint));
 
@@ -29,9 +29,11 @@ class ApiService {
       final Map<String, dynamic> data = json.decode(response.body);
       if (data['$gameId']['success']) {
         final gameData = data['$gameId']['data'];
+        int steamAppId = gameData['steam_appid'] ??
+            -1; // Providing a default value or handle null differently
 
         return GameDetails(
-          id: gameData['steam_appid'],
+          id: steamAppId,
           title: gameData['name'] ?? 'Title not available',
           description:
               gameData['short_description'] ?? 'Description not available',
@@ -45,10 +47,11 @@ class ApiService {
           imageUrl: gameData['header_image'] ?? '',
         );
       } else {
-        throw Exception('Failed to load game details');
+        throw Exception('Failed to load game details for game ID $gameId');
       }
     } else {
-      throw Exception('Failed to load game details');
+      throw Exception(
+          'Failed to load game details for game ID $gameId with status code ${response.statusCode}');
     }
   }
 
@@ -66,6 +69,7 @@ class ApiService {
 
       if (foundGame != null) {
         // Fetch and return the details of the found game
+
         return await fetchGameDetails(foundGame[
             'appid']); // Ensure 'appid' matches the key used in the API
       }
@@ -82,11 +86,10 @@ class ApiService {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       List<GameDetails> featuredGames = [];
-
-      // The structure of the JSON response might be different so adjust accordingly
       for (var item in jsonResponse['featured_win']) {
+        int steamAppId = item['steam_appid'] as int? ?? -1;
         final gameDetails = GameDetails(
-          id: item['steam_appid'].toString(), // Convert the ID to a string
+          id: steamAppId,
           title: item['name'] ?? 'No title',
           description: item['short_description'] ?? 'No description',
           price: item['price'] ?? 'No price',
@@ -99,7 +102,8 @@ class ApiService {
       }
       return featuredGames;
     } else {
-      throw Exception('Failed to load featured games');
+      throw Exception(
+          'Failed to load featured games with status code ${response.statusCode}');
     }
   }
 

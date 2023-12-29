@@ -13,7 +13,7 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Accessing the FavoritesProvider to check if the current game is favorite
-    var isFavorite =
+    bool isFavorite =
         Provider.of<FavoritesProvider>(context).isFavorite(gameDetails.id);
 
     return Scaffold(

@@ -7,7 +7,6 @@ import 'package:final_project/screens/tabs/reviews_tab.dart';
 import 'package:final_project/screens/tabs/lists_tab.dart';
 import 'package:final_project/screens/search_screen.dart';
 import 'package:final_project/screens/collection_screen.dart';
-import 'package:flutter/foundation.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,10 +57,9 @@ class _HomeScreenState extends State<HomeScreen>
     _tabController = TabController(length: 3, vsync: this);
 
     _screens = [
-      // The HomeScreen content which includes the internal tabs for Games, Reviews, and Lists
       buildHomeScreenContent(),
-      const SearchScreen(), // Assuming SearchScreen is implemented
-      const CollectionScreen(), // Assuming CollectionScreen is implemented
+      const SearchScreen(),
+      const CollectionScreen(),
     ];
   }
 
@@ -69,12 +67,11 @@ class _HomeScreenState extends State<HomeScreen>
     List<GameDetails> gamesList = [];
     for (var appId in appIds) {
       try {
-        GameDetails details = await ApiService.fetchGameDetails(appId);
+        GameDetails details = await ApiService.fetchGameDetails(
+            appId); // appId is already an integer
         gamesList.add(details);
       } catch (e) {
-        if (kDebugMode) {
-          print('Failed to fetch game details for appId: $appId');
-        }
+        print('Failed to fetch game details for appId: $appId, Error: $e');
       }
     }
     return gamesList;
