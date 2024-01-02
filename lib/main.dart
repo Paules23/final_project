@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      // Initialize the FavoritesProvider
       create: (context) => FavoritesProvider(),
       child: MaterialApp(
         title: 'Your Application',

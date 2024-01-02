@@ -10,6 +10,9 @@ class GamesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int crossAxisCount = MediaQuery.of(context).size.width ~/ 200;
+    crossAxisCount = crossAxisCount > 0 ? crossAxisCount : 1;
+
     return FutureBuilder<List<GameDetails>>(
       future: gamesDetails,
       builder: (context, snapshot) {
@@ -22,16 +25,14 @@ class GamesTab extends StatelessWidget {
         } else {
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+              crossAxisCount: crossAxisCount,
               crossAxisSpacing: 8.0,
               mainAxisSpacing: 8.0,
             ),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              // Wrap the GameItemWidget with InkWell
               return InkWell(
                 onTap: () {
-                  // Push GameScreen when tapped
                   Navigator.push(
                     context,
                     MaterialPageRoute(

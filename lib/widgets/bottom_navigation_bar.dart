@@ -15,7 +15,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) {
-        onTap(index); // You'll implement this in the HomeScreen widget
+        onTap(index);
         switch (index) {
           case 0:
             Navigator.pushReplacementNamed(context, '/');

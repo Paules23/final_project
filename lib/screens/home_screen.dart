@@ -67,8 +67,7 @@ class _HomeScreenState extends State<HomeScreen>
     List<GameDetails> gamesList = [];
     for (var appId in appIds) {
       try {
-        GameDetails details = await ApiService.fetchGameDetails(
-            appId); // appId is already an integer
+        GameDetails details = await ApiService.fetchGameDetails(appId);
         gamesList.add(details);
       } catch (e) {
         print('Failed to fetch game details for appId: $appId, Error: $e');
@@ -115,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Use a Scaffold with an IndexedStack for the body
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -126,8 +124,6 @@ class _HomeScreenState extends State<HomeScreen>
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            // If you have internal tabs in HomeScreen, you may want to reset them to the first tab
-            // when navigating away from HomeScreen
             if (_currentIndex != 0) {
               _tabController.index = 0;
             }

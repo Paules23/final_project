@@ -20,7 +20,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch featured games when the widget is first created
+
     _featuredGames = ApiService.fetchFeaturedGames();
   }
 
@@ -28,27 +28,26 @@ class _SearchScreenState extends State<SearchScreen> {
     if (gameName.isEmpty) {
       setState(() {
         _featuredGames = ApiService.fetchFeaturedGames();
-        _isSearching = false; // Set to false when not searching
+        _isSearching = false;
       });
       return;
     }
 
     setState(() {
-      _isSearching = true; // Set to true when search begins
+      _isSearching = true;
     });
 
     try {
       final details = await ApiService.getGameDetailsByName(gameName);
       setState(() {
         _featuredGames = Future.value(details == null ? [] : [details]);
-        _isSearching = false; // Set to false when search ends
+        _isSearching = false;
       });
     } catch (e) {
-      // Handle error
       print("Error searching for game: $e");
       setState(() {
         _featuredGames = Future.value([]);
-        _isSearching = false; // Set to false on error
+        _isSearching = false;
       });
     }
   }
@@ -108,7 +107,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         title: Text(game.title),
                         leading: Image.network(game.imageUrl),
                         onTap: () {
-                          // Navigate to the detailed screen for the game
                           Navigator.push(
                             context,
                             MaterialPageRoute(

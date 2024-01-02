@@ -49,52 +49,52 @@ class _CollectionScreenState extends State<CollectionScreen> {
         Provider.of<FavoritesProvider>(context, listen: false);
 
     _loadInitialFavoriteGames();
+  }
 
-    @override
-    void dispose() {
-      Provider.of<FavoritesProvider>(context, listen: false)
-          .removeListener(_updateGameDetails);
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    Provider.of<FavoritesProvider>(context, listen: false)
+        .removeListener(_updateGameDetails);
+    super.dispose();
+  }
 
-    @override
-    Widget build(BuildContext context) {
-      var favoritesProvider = Provider.of<FavoritesProvider>(context);
+  @override
+  Widget build(BuildContext context) {
+    var favoritesProvider = Provider.of<FavoritesProvider>(context);
 
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('My Games Collection'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Games Collection'),
+      ),
+      body: GridView.builder(
+        padding: EdgeInsets.all(8),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
         ),
-        body: GridView.builder(
-          padding: EdgeInsets.all(8),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: favoritesProvider.favorites.length,
-          itemBuilder: (context, index) {
-            int id = favoritesProvider.favorites.elementAt(index);
-            GameDetails? details = _gameDetails[id];
+        itemCount: favoritesProvider.favorites.length,
+        itemBuilder: (context, index) {
+          int id = favoritesProvider.favorites.elementAt(index);
+          GameDetails? details = _gameDetails[id];
 
-            if (details != null) {
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => GameScreen(gameDetails: details),
-                    ),
-                  );
-                },
-                child: GameItemWidget(details),
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
-      );
-    }
+          if (details != null) {
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GameScreen(gameDetails: details),
+                  ),
+                );
+              },
+              child: GameItemWidget(details),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
   }
 }

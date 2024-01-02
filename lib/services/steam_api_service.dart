@@ -29,8 +29,7 @@ class ApiService {
       final Map<String, dynamic> data = json.decode(response.body);
       if (data['$gameId']['success']) {
         final gameData = data['$gameId']['data'];
-        int steamAppId = gameData['steam_appid'] ??
-            -1; // Providing a default value or handle null differently
+        int steamAppId = gameData['steam_appid'] ?? -1;
 
         return GameDetails(
           id: steamAppId,
@@ -57,10 +56,8 @@ class ApiService {
 
   static Future<GameDetails?> getGameDetailsByName(String gameName) async {
     try {
-      // Fetch the complete list of games
       List<dynamic> allGames = await fetchSteamGames();
 
-      // Find the game with the matching name
       var foundGame = allGames.firstWhere(
         (game) =>
             game['name'].toString().toLowerCase() == gameName.toLowerCase(),
@@ -68,18 +65,16 @@ class ApiService {
       );
 
       if (foundGame != null) {
-        // Fetch and return the details of the found game
-
-        return await fetchGameDetails(foundGame[
-            'appid']); // Ensure 'appid' matches the key used in the API
+        return await fetchGameDetails(foundGame['appid']);
       }
-      return null; // Return null if no matching game was found
+      return null;
     } catch (e) {
       throw Exception('Error getting game details by name: $e');
     }
   }
 
   static Future<List<GameDetails>> fetchFeaturedGames() async {
+    //the steamappid does not work because of this wierd api of featured games, and i tried getting it by name and doesnt work either have to finish
     final featuredGamesUrl = 'https://store.steampowered.com/api/featured/';
     final response = await http.get(Uri.parse(featuredGamesUrl));
 

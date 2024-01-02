@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:final_project/services/steam_api_service.dart';
@@ -10,7 +8,6 @@ class FavoritesProvider with ChangeNotifier {
   bool _isError = false;
   String _errorMessage = '';
 
-  // Map to hold game details, if you decide to cache them in the provider
   Map<int, GameDetails> _gameDetailsCache = {};
 
   FavoritesProvider() {
@@ -51,17 +48,13 @@ class FavoritesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // New method to handle adding a single favorite
   Future<void> addFavorite(int gameId) async {
     try {
-      // Add to favorites
       _favorites.add(gameId);
-      // Optionally load game details and update cache
 
       var details = await ApiService.fetchGameDetails(gameId);
       _gameDetailsCache[gameId] = details;
 
-      // Save updated favorites
       final prefs = await SharedPreferences.getInstance();
       await prefs.setStringList(
           'favorites', _favorites.map((id) => id.toString()).toList());
@@ -73,16 +66,14 @@ class FavoritesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // New method to handle removing a single favorite
   void removeFavorite(int gameId) {
     _favorites.remove(gameId);
-    _gameDetailsCache.remove(gameId); // Remove from cache if you're using one
-    // Save updated favorites
+    _gameDetailsCache.remove(gameId);
+
     _saveFavorites();
     notifyListeners();
   }
 
-  // Utility method to save favorites, called after add or remove operations
   Future<void> _saveFavorites() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -100,6 +91,5 @@ class FavoritesProvider with ChangeNotifier {
   bool get isError => _isError;
   String get errorMessage => _errorMessage;
 
-  // Method to get game details for a specific ID
   GameDetails? getGameDetails(int gameId) => _gameDetailsCache[gameId];
 }
