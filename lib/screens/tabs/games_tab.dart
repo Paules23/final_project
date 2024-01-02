@@ -34,8 +34,7 @@ class GamesTab extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      10), // Adjust the border radius as needed
+                  borderRadius: BorderRadius.circular(10),
                   child: GameItemWidget(snapshot.data![index]),
                 ),
               );

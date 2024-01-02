@@ -64,7 +64,14 @@ class _CollectionScreenState extends State<CollectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Games Collection'),
+        title: Text(
+          'My Games Collection',
+          style: TextStyle(
+            fontSize: 32.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: GridView.builder(
         padding: EdgeInsets.all(8),
@@ -89,9 +96,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
                 );
               },
               child: ClipRRect(
-                // Wrap the GameItemWidget with ClipRRect
-                borderRadius: BorderRadius.circular(
-                    10), // Adjust the border radius as needed
+                borderRadius: BorderRadius.circular(10),
                 child: GameItemWidget(details),
               ),
             );

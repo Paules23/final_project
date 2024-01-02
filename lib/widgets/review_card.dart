@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:final_project/models/review_model.dart'; // Your Review model path
+import 'package:final_project/models/review_model.dart';
 
 class ReviewCard extends StatelessWidget {
   final Review review;

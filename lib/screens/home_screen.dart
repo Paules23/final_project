@@ -91,15 +91,25 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Home',
+            'HOME',
             style: TextStyle(
-              fontSize: 24, // Set the font size to 24 (adjust as needed)
-              fontWeight: FontWeight.bold, // Make the text bold
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.orange,
+              shadows: <Shadow>[
+                Shadow(
+                  offset: Offset(1.0, 1.0),
+                  blurRadius: 3.0,
+                  color: Color.fromARGB(150, 0, 0, 0),
+                ),
+              ],
             ),
           ),
-          centerTitle: true, // Center the title horizontally
+          centerTitle: true,
+          backgroundColor: Color.fromARGB(255, 26, 25, 25),
+          elevation: 0,
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight + 0),
+            preferredSize: const Size.fromHeight(kToolbarHeight),
             child: RoundedBar(
               buttonTitles: const ['GAMES', 'REVIEWS', 'LISTS'],
               onPressed: (index) {
@@ -127,30 +137,48 @@ class _HomeScreenState extends State<HomeScreen>
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-            if (_currentIndex != 0) {
-              _tabController.index = 0;
-            }
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.collections),
-            label: 'Collection',
-          ),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.black54,
+              spreadRadius: 0,
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+              if (_currentIndex != 0) {
+                _tabController.index = 0;
+              }
+            });
+          },
+          backgroundColor: Color.fromARGB(255, 31, 30, 30),
+          selectedItemColor: Colors.orange,
+          unselectedItemColor: Colors.white,
+          selectedFontSize: 14,
+          unselectedFontSize: 12,
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_filled),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.collections_bookmark),
+              label: 'Collection',
+            ),
+          ],
+          elevation: 20,
+        ),
       ),
     );
   }

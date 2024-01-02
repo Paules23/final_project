@@ -22,8 +22,7 @@ class GameItemWidget extends StatelessWidget {
         gameDetails.imageUrl,
         width: double.infinity,
         height: MediaQuery.of(context).size.width /
-            (MediaQuery.of(context).size.width /
-                200), // Adjust the height ratio based on your design
+            (MediaQuery.of(context).size.width / 200),
         fit: BoxFit.cover,
       ),
     );

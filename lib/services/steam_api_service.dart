@@ -74,7 +74,6 @@ class ApiService {
   }
 
   static Future<List<GameDetails>> fetchFeaturedGames() async {
-    //the steamappid does not work because of this wierd api of featured games, and i tried getting it by name and doesnt work either have to finish
     final featuredGamesUrl = 'https://store.steampowered.com/api/featured/';
     final response = await http.get(Uri.parse(featuredGamesUrl));
 

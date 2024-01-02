@@ -16,6 +16,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: (index) {
         onTap(index);
+
         switch (index) {
           case 0:
             Navigator.pushReplacementNamed(context, '/');
@@ -28,6 +29,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
             break;
         }
       },
+      backgroundColor: Colors.black,
+      selectedItemColor: const Color.fromARGB(255, 244, 155, 54),
+      unselectedItemColor: Colors.white54,
+      selectedFontSize: 14,
+      unselectedFontSize: 12,
+      type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -42,6 +49,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Collection',
         ),
       ],
+      elevation: 0,
     );
   }
 }

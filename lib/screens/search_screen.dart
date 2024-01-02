@@ -69,21 +69,31 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Game'),
+        title: Text(
+          'Search Game',
+          style: TextStyle(
+            fontSize: 32.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Column(
         children: [
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Enter game name',
-              suffixIcon: Icon(Icons.search),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Enter game name',
+                suffixIcon: Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+                _onSearchChanged(value);
+              },
             ),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-              _onSearchChanged(value);
-            },
           ),
           Expanded(
             child: FutureBuilder<List<GameDetails>>(

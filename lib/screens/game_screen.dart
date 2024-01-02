@@ -12,12 +12,15 @@ class GameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isFavorite =
         Provider.of<FavoritesProvider>(context).isFavorite(gameDetails.id);
-    final double appBarHeight = AppBar().preferredSize.height;
-    final double iconBoxSize = 48.0; // Example size, you can adjust as needed
+    double imageHeight = MediaQuery.of(context).size.width * 0.5;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(gameDetails.title),
+        backgroundColor: Colors.black,
+        title: Text(gameDetails.title, style: TextStyle(color: Colors.white)),
+        actions: [
+          Icon(Icons.gamepad, color: Colors.white),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -28,79 +31,62 @@ class GameScreen extends StatelessWidget {
                 Image.network(
                   gameDetails.imageUrl,
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.width /
-                      (MediaQuery.of(context).size.width / 200),
+                  height: imageHeight,
                   fit: BoxFit.cover,
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).size.width * 0.366 - appBarHeight,
-                  right: 9.5,
-                  child: Container(
-                    width: iconBoxSize,
-                    height: iconBoxSize,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 240, 130, 28),
-                      borderRadius: BorderRadius.circular(8),
+                  top: imageHeight - 70,
+                  right: 16,
+                  child: FloatingActionButton(
+                    backgroundColor: const Color.fromARGB(255, 244, 162, 54),
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite
+                          ? Color.fromARGB(255, 0, 0, 0)
+                          : const Color.fromARGB(255, 255, 255, 255),
+                      size: 30,
                     ),
-                    child: IconButton(
-                      iconSize: 30,
-                      icon: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite
-                            ? Color.fromARGB(255, 0, 0, 0)
-                            : Colors.white,
-                      ),
-                      onPressed: () {
-                        Provider.of<FavoritesProvider>(context, listen: false)
-                            .toggleFavorite(gameDetails.id);
-                      },
-                    ),
+                    onPressed: () {
+                      Provider.of<FavoritesProvider>(context, listen: false)
+                          .toggleFavorite(gameDetails.id);
+                    },
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    gameDetails.title,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Description: ${gameDetails.description}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Developer: ${gameDetails.developer}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Publisher: ${gameDetails.publisher}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Genre: ${gameDetails.genre}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Price: ${gameDetails.price}',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
-                  ),
+                  gameDetailCard('Title', gameDetails.title, isHighlight: true),
+                  gameDetailCard('Description', gameDetails.description),
+                  gameDetailCard('Developer', gameDetails.developer),
+                  gameDetailCard('Publisher', gameDetails.publisher),
+                  gameDetailCard('Genre', gameDetails.genre),
+                  gameDetailCard('Price', gameDetails.price, isHighlight: true),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget gameDetailCard(String title, String content,
+      {bool isHighlight = false}) {
+    return Card(
+      color:
+          isHighlight ? const Color.fromARGB(255, 244, 155, 54) : Colors.black,
+      child: ListTile(
+        title: Text(title,
+            style: TextStyle(
+                color: isHighlight
+                    ? Colors.white
+                    : const Color.fromARGB(255, 244, 155, 54),
+                fontWeight: FontWeight.bold)),
+        subtitle: Text(content, style: TextStyle(color: Colors.white)),
       ),
     );
   }
