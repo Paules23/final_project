@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
     368010,
     108600,
     739630,
+    550,
   ];
 
   late Future<List<GameDetails>> _gamesDetails;
@@ -89,9 +90,16 @@ class _HomeScreenState extends State<HomeScreen>
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Home'),
+          title: Text(
+            'Home',
+            style: TextStyle(
+              fontSize: 24, // Set the font size to 24 (adjust as needed)
+              fontWeight: FontWeight.bold, // Make the text bold
+            ),
+          ),
+          centerTitle: true, // Center the title horizontally
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight + 50),
+            preferredSize: const Size.fromHeight(kToolbarHeight + 0),
             child: RoundedBar(
               buttonTitles: const ['GAMES', 'REVIEWS', 'LISTS'],
               onPressed: (index) {
@@ -104,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen>
           controller: _tabController,
           children: [
             GamesTab(_gamesDetails),
-            ReviewsTab(_reviews),
+            ReviewsTab(),
             ListsTab(_lists),
           ],
         ),

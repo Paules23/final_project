@@ -19,7 +19,6 @@ class _CollectionScreenState extends State<CollectionScreen> {
   @override
   void initState() {
     super.initState();
-
     Provider.of<FavoritesProvider>(context, listen: false)
         .addListener(_updateGameDetails);
     _loadInitialFavoriteGames();
@@ -47,7 +46,6 @@ class _CollectionScreenState extends State<CollectionScreen> {
   void _updateGameDetails() {
     var favoritesProvider =
         Provider.of<FavoritesProvider>(context, listen: false);
-
     _loadInitialFavoriteGames();
   }
 
@@ -61,6 +59,8 @@ class _CollectionScreenState extends State<CollectionScreen> {
   @override
   Widget build(BuildContext context) {
     var favoritesProvider = Provider.of<FavoritesProvider>(context);
+    int crossAxisCount = MediaQuery.of(context).size.width ~/ 150;
+    crossAxisCount = crossAxisCount > 0 ? crossAxisCount : 1;
 
     return Scaffold(
       appBar: AppBar(
@@ -69,9 +69,9 @@ class _CollectionScreenState extends State<CollectionScreen> {
       body: GridView.builder(
         padding: EdgeInsets.all(8),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 15.0,
+          mainAxisSpacing: 15.0,
         ),
         itemCount: favoritesProvider.favorites.length,
         itemBuilder: (context, index) {
@@ -88,7 +88,12 @@ class _CollectionScreenState extends State<CollectionScreen> {
                   ),
                 );
               },
-              child: GameItemWidget(details),
+              child: ClipRRect(
+                // Wrap the GameItemWidget with ClipRRect
+                borderRadius: BorderRadius.circular(
+                    10), // Adjust the border radius as needed
+                child: GameItemWidget(details),
+              ),
             );
           } else {
             return Center(child: CircularProgressIndicator());

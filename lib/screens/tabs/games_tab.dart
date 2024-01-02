@@ -10,7 +10,7 @@ class GamesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int crossAxisCount = MediaQuery.of(context).size.width ~/ 200;
+    int crossAxisCount = MediaQuery.of(context).size.width ~/ 150;
     crossAxisCount = crossAxisCount > 0 ? crossAxisCount : 1;
 
     return FutureBuilder<List<GameDetails>>(
@@ -24,24 +24,20 @@ class GamesTab extends StatelessWidget {
           return Center(child: Text('No games available'));
         } else {
           return GridView.builder(
+            padding: EdgeInsets.all(8),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 8.0,
-              mainAxisSpacing: 8.0,
+              crossAxisSpacing: 15.0,
+              mainAxisSpacing: 15.0,
             ),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          GameScreen(gameDetails: snapshot.data![index]),
-                    ),
-                  );
-                },
-                child: GameItemWidget(snapshot.data![index]),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                      10), // Adjust the border radius as needed
+                  child: GameItemWidget(snapshot.data![index]),
+                ),
               );
             },
           );

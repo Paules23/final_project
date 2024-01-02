@@ -12,6 +12,8 @@ class GameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isFavorite =
         Provider.of<FavoritesProvider>(context).isFavorite(gameDetails.id);
+    final double appBarHeight = AppBar().preferredSize.height;
+    final double iconBoxSize = 48.0; // Example size, you can adjust as needed
 
     return Scaffold(
       appBar: AppBar(
@@ -21,9 +23,41 @@ class GameScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.network(
-              gameDetails.imageUrl,
-              fit: BoxFit.cover,
+            Stack(
+              children: [
+                Image.network(
+                  gameDetails.imageUrl,
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.width / 200),
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: MediaQuery.of(context).size.width * 0.366 - appBarHeight,
+                  right: 9.5,
+                  child: Container(
+                    width: iconBoxSize,
+                    height: iconBoxSize,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 240, 130, 28),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: IconButton(
+                      iconSize: 30,
+                      icon: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite
+                            ? Color.fromARGB(255, 0, 0, 0)
+                            : Colors.white,
+                      ),
+                      onPressed: () {
+                        Provider.of<FavoritesProvider>(context, listen: false)
+                            .toggleFavorite(gameDetails.id);
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -67,15 +101,6 @@ class GameScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Provider.of<FavoritesProvider>(context, listen: false)
-              .toggleFavorite(gameDetails.id);
-        },
-        child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-        backgroundColor:
-            isFavorite ? const Color.fromARGB(255, 244, 155, 54) : Colors.grey,
       ),
     );
   }

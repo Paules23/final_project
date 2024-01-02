@@ -85,12 +85,12 @@ class ApiService {
         int steamAppId = item['steam_appid'] as int? ?? -1;
         final gameDetails = GameDetails(
           id: steamAppId,
-          title: item['name'] ?? 'No title',
-          description: item['short_description'] ?? 'No description',
-          price: item['price'] ?? 'No price',
-          genre: item['genre'] ?? 'No genre',
-          developer: item['developer'] ?? 'No developer',
-          publisher: item['publisher'] ?? 'No publisher',
+          title: item['name'] ?? 'Available soon',
+          description: item['short_description'] ?? 'Available soon',
+          price: item['price'] ?? 'Available soon',
+          genre: item['genre'] ?? 'Available soon',
+          developer: item['developer'] ?? 'Available soon',
+          publisher: item['publisher'] ?? 'Available soon',
           imageUrl: item['header_image'] ?? '',
         );
         featuredGames.add(gameDetails);
