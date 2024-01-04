@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/services/steam_api_service.dart';
 import 'package:final_project/models/game_model.dart';
-import 'package:final_project/screens/game_screen.dart';
+import 'package:final_project/widgets/search_input_field.dart';
+import 'package:final_project/widgets/game_search_results.dart';
 import 'dart:async';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
   Future<List<GameDetails>>? _featuredGames;
-  String _searchQuery = '';
   bool _isSearching = false;
   Timer? _debounce;
 
@@ -44,6 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
         _isSearching = false;
       });
     } catch (e) {
+      // ignore: avoid_print
       print("Error searching for game: $e");
       setState(() {
         _featuredGames = Future.value([]);
@@ -69,7 +71,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Search Game',
           style: TextStyle(
             fontSize: 32.0,
@@ -80,58 +82,16 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Enter game name',
-                suffixIcon: Icon(Icons.search),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-                _onSearchChanged(value);
-              },
-            ),
+          SearchInputField(
+            onSearchChanged: (value) {
+              setState(() {});
+              _onSearchChanged(value);
+            },
           ),
           Expanded(
-            child: FutureBuilder<List<GameDetails>>(
-              future: _featuredGames,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    _isSearching) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
-                } else if (snapshot.hasData) {
-                  List<GameDetails> games = snapshot.data ?? [];
-                  if (games.isEmpty && !_isSearching) {
-                    return const Center(child: Text("No games found."));
-                  }
-                  return ListView.builder(
-                    itemCount: games.length,
-                    itemBuilder: (context, index) {
-                      GameDetails game = games[index];
-                      return ListTile(
-                        title: Text(game.title),
-                        leading: Image.network(game.imageUrl),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  GameScreen(gameDetails: game),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: Text("Start searching..."));
-                }
-              },
+            child: GameSearchResults(
+              featuredGames: _featuredGames,
+              isSearching: _isSearching,
             ),
           ),
         ],

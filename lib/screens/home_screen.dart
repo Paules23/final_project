@@ -41,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen>
   ];
 
   late Future<List<GameDetails>> _gamesDetails;
-  late Future<List<String>> _reviews;
   late Future<List<String>> _lists;
 
   late TabController _tabController;
@@ -52,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _gamesDetails = _fetchGameDetailsList();
-    _reviews = _fetchReviews();
     _lists = _fetchLists();
 
     _tabController = TabController(length: 3, vsync: this);
@@ -71,14 +69,11 @@ class _HomeScreenState extends State<HomeScreen>
         GameDetails details = await ApiService.fetchGameDetails(appId);
         gamesList.add(details);
       } catch (e) {
+        // ignore: avoid_print
         print('Failed to fetch game details for appId: $appId, Error: $e');
       }
     }
     return gamesList;
-  }
-
-  Future<List<String>> _fetchReviews() async {
-    return [];
   }
 
   Future<List<String>> _fetchLists() async {
@@ -90,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen>
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'HOME',
             style: TextStyle(
               fontSize: 24,
@@ -106,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           centerTitle: true,
-          backgroundColor: Color.fromARGB(255, 26, 25, 25),
+          backgroundColor: const Color.fromARGB(255, 26, 25, 25),
           elevation: 0,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -122,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen>
           controller: _tabController,
           children: [
             GamesTab(_gamesDetails),
-            ReviewsTab(),
+            const ReviewsTab(),
             ListsTab(_lists),
           ],
         ),
@@ -138,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen>
         children: _screens,
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Colors.black54,
@@ -157,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen>
               }
             });
           },
-          backgroundColor: Color.fromARGB(255, 31, 30, 30),
+          backgroundColor: const Color.fromARGB(255, 31, 30, 30),
           selectedItemColor: Colors.orange,
           unselectedItemColor: Colors.white,
           selectedFontSize: 14,

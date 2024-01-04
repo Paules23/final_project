@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/widgets/game_tile.dart';
-import 'package:final_project/screens/game_screen.dart';
 
 class GamesTab extends StatelessWidget {
   final Future<List<GameDetails>> gamesDetails;
@@ -17,14 +16,14 @@ class GamesTab extends StatelessWidget {
       future: gamesDetails,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No games available'));
+          return const Center(child: Text('No games available'));
         } else {
           return GridView.builder(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: 15.0,

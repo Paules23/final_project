@@ -3,18 +3,18 @@ import 'package:provider/provider.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/utils/favorites_provider.dart';
 import 'package:final_project/services/steam_api_service.dart';
-import 'package:final_project/screens/game_screen.dart';
-import 'package:final_project/widgets/game_tile.dart';
+import 'package:final_project/widgets/game_collection_item.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CollectionScreenState createState() => _CollectionScreenState();
 }
 
 class _CollectionScreenState extends State<CollectionScreen> {
-  Map<int, GameDetails> _gameDetails = {};
+  final Map<int, GameDetails> _gameDetails = {};
 
   @override
   void initState() {
@@ -37,6 +37,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
             });
           }
         } catch (e) {
+          // ignore: avoid_print
           print('Failed to load game details for ID $id: $e');
         }
       }
@@ -44,8 +45,6 @@ class _CollectionScreenState extends State<CollectionScreen> {
   }
 
   void _updateGameDetails() {
-    var favoritesProvider =
-        Provider.of<FavoritesProvider>(context, listen: false);
     _loadInitialFavoriteGames();
   }
 
@@ -64,7 +63,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'My Games Collection',
           style: TextStyle(
             fontSize: 32.0,
@@ -74,7 +73,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
         centerTitle: true,
       ),
       body: GridView.builder(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
           crossAxisSpacing: 15.0,
@@ -86,22 +85,9 @@ class _CollectionScreenState extends State<CollectionScreen> {
           GameDetails? details = _gameDetails[id];
 
           if (details != null) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GameScreen(gameDetails: details),
-                  ),
-                );
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: GameItemWidget(details),
-              ),
-            );
+            return GameCollectionItem(gameDetails: details);
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

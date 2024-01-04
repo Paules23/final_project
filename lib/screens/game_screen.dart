@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/utils/favorites_provider.dart';
+import 'package:final_project/widgets/game_detail_card.dart';
 
 class GameScreen extends StatelessWidget {
   final GameDetails gameDetails;
@@ -17,8 +18,9 @@ class GameScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text(gameDetails.title, style: TextStyle(color: Colors.white)),
-        actions: [
+        title: Text(gameDetails.title,
+            style: const TextStyle(color: Colors.white)),
+        actions: const [
           Icon(Icons.gamepad, color: Colors.white),
         ],
       ),
@@ -42,7 +44,7 @@ class GameScreen extends StatelessWidget {
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: isFavorite
-                          ? Color.fromARGB(255, 0, 0, 0)
+                          ? const Color.fromARGB(255, 0, 0, 0)
                           : const Color.fromARGB(255, 255, 255, 255),
                       size: 30,
                     ),
@@ -59,34 +61,26 @@ class GameScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  gameDetailCard('Title', gameDetails.title, isHighlight: true),
-                  gameDetailCard('Description', gameDetails.description),
-                  gameDetailCard('Developer', gameDetails.developer),
-                  gameDetailCard('Publisher', gameDetails.publisher),
-                  gameDetailCard('Genre', gameDetails.genre),
-                  gameDetailCard('Price', gameDetails.price, isHighlight: true),
+                  GameDetailCard(
+                      title: 'Title',
+                      content: gameDetails.title,
+                      isHighlight: true),
+                  GameDetailCard(
+                      title: 'Description', content: gameDetails.description),
+                  GameDetailCard(
+                      title: 'Developer', content: gameDetails.developer),
+                  GameDetailCard(
+                      title: 'Publisher', content: gameDetails.publisher),
+                  GameDetailCard(title: 'Genre', content: gameDetails.genre),
+                  GameDetailCard(
+                      title: 'Price',
+                      content: gameDetails.price,
+                      isHighlight: true),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget gameDetailCard(String title, String content,
-      {bool isHighlight = false}) {
-    return Card(
-      color:
-          isHighlight ? const Color.fromARGB(255, 244, 155, 54) : Colors.black,
-      child: ListTile(
-        title: Text(title,
-            style: TextStyle(
-                color: isHighlight
-                    ? Colors.white
-                    : const Color.fromARGB(255, 244, 155, 54),
-                fontWeight: FontWeight.bold)),
-        subtitle: Text(content, style: TextStyle(color: Colors.white)),
       ),
     );
   }

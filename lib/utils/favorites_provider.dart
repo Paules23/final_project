@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:final_project/services/steam_api_service.dart';
 import 'package:final_project/models/game_model.dart';
+import 'package:final_project/services/steam_api_service.dart';
+import 'package:final_project/utils/preferences_util.dart';
 
 class FavoritesProvider with ChangeNotifier {
   Set<int> _favorites = {};
   bool _isError = false;
   String _errorMessage = '';
 
-  Map<int, GameDetails> _gameDetailsCache = {};
+  final Map<int, GameDetails> _gameDetailsCache = {};
 
   FavoritesProvider() {
     loadFavorites();
@@ -16,15 +16,13 @@ class FavoritesProvider with ChangeNotifier {
 
   Future<void> loadFavorites() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      List<String>? favStringList = prefs.getStringList('favorites');
-      if (favStringList != null) {
-        _favorites = favStringList.map((id) => int.parse(id)).toSet();
-      }
+      List<String> favStringList = await PreferencesUtil.getFavoriteIds();
+      _favorites = favStringList.map((id) => int.parse(id)).toSet();
       _isError = false;
     } catch (e) {
       _isError = true;
       _errorMessage = 'Failed to load favorites: $e';
+      // ignore: avoid_print
       print(_errorMessage);
     }
     notifyListeners();
@@ -36,15 +34,7 @@ class FavoritesProvider with ChangeNotifier {
     } else {
       _favorites.add(gameId);
     }
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList(
-          'favorites', _favorites.map((id) => id.toString()).toList());
-    } catch (e) {
-      _isError = true;
-      _errorMessage = 'Failed to save favorites: $e';
-      print(_errorMessage);
-    }
+    await _saveFavorites();
     notifyListeners();
   }
 
@@ -55,12 +45,11 @@ class FavoritesProvider with ChangeNotifier {
       var details = await ApiService.fetchGameDetails(gameId);
       _gameDetailsCache[gameId] = details;
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList(
-          'favorites', _favorites.map((id) => id.toString()).toList());
+      await _saveFavorites();
     } catch (e) {
       _isError = true;
       _errorMessage = 'Failed to add favorite: $e';
+      // ignore: avoid_print
       print(_errorMessage);
     }
     notifyListeners();
@@ -76,12 +65,12 @@ class FavoritesProvider with ChangeNotifier {
 
   Future<void> _saveFavorites() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setStringList(
-          'favorites', _favorites.map((id) => id.toString()).toList());
+      await PreferencesUtil.setFavoriteIds(
+          _favorites.map((id) => id.toString()).toList());
     } catch (e) {
       _isError = true;
       _errorMessage = 'Failed to save favorites: $e';
+      // ignore: avoid_print
       print(_errorMessage);
     }
   }

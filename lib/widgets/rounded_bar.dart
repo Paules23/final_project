@@ -29,8 +29,8 @@ class RoundedBar extends StatelessWidget {
                     onPressed(index);
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(255, 255, 188, 72),
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 255, 188, 72),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                       side: const BorderSide(

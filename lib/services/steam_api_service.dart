@@ -74,7 +74,7 @@ class ApiService {
   }
 
   static Future<List<GameDetails>> fetchFeaturedGames() async {
-    final featuredGamesUrl = 'https://store.steampowered.com/api/featured/';
+    const featuredGamesUrl = 'https://store.steampowered.com/api/featured/';
     final response = await http.get(Uri.parse(featuredGamesUrl));
 
     if (response.statusCode == 200) {

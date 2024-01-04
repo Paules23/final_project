@@ -38,14 +38,6 @@ class _ReviewsTabState extends State<ReviewsTab> {
         imageUrl: '',
       ),
       Review(
-        gameName: 'SuperFlight',
-        username: 'Rotyer15',
-        rating: 2,
-        reviewText:
-            '"Superflight" is celebrated for its simple yet exhilarating gameplay, offering an addictive experience as players glide through colorful, procedurally generated landscapes. Its minimalist design and easy-to-learn controls make for an accessible yet challenging game, where the thrill of beating high scores by skillfully navigating tight spaces is endlessly satisfying. With its low price and engaging mechanics, Superflight provides a pure, exhilarating sense of freedom and speed, perfect for quick play sessions.',
-        imageUrl: '',
-      ),
-      Review(
         gameName: 'Dave the Diver',
         username: 'Chi3vitee',
         rating: 4,
@@ -54,27 +46,11 @@ class _ReviewsTabState extends State<ReviewsTab> {
         imageUrl: '',
       ),
       Review(
-        gameName: 'Undertale',
-        username: 'ShadowBlade47',
-        rating: 5,
-        reviewText:
-            '"Undertale" stands out for its unique blend of classic RPG elements with a deeply engaging story that changes based on player choices. Known for its clever writing, memorable characters, and emotional depth, the game challenges traditional video game morality and storytelling. Its retro-style graphics and innovative soundtrack complement the games thematic richness and humor. "Undertale" offers a profound, sometimes humorous, often touching experience that has left a lasting impact on players and the gaming community.',
-        imageUrl: '',
-      ),
-      Review(
         gameName: 'Hollow Knight',
         username: 'StarGazer99',
         rating: 5,
         reviewText:
             '"Hollow Knight" is widely acclaimed for its beautifully hand-drawn art, intricate and challenging gameplay, and expansive, atmospheric world. The game masterfully combines action, exploration, and storytelling, setting players on an adventure through a hauntingly desolate kingdom teeming with bizarre creatures and forgotten lore. Its precise combat, complex character progression, and the sheer depth of its cryptic world offer a compelling experience that keeps players enthralled for hours, making it a standout title in the Metroidvania genre.',
-        imageUrl: '',
-      ),
-      Review(
-        gameName: 'Serial Cleaner',
-        username: 'FrostFireX',
-        rating: 1,
-        reviewText:
-            '"Serial Cleaner" is noted for its unique, darkly humorous take on the stealth action genre, where players are tasked with cleaning up crime scenes without getting caught. Set in the 1970s, the game pairs its morbid premise with a vibrant, retro aesthetic and a funky soundtrack. It challenges players with increasingly complex levels, requiring strategic thinking and quick reflexes. Despite its grim subject, "Serial Cleaner" offers a quirky, engaging experience that combines macabre comedy with satisfying stealth gameplay.',
         imageUrl: '',
       ),
       Review(
@@ -95,6 +71,7 @@ class _ReviewsTabState extends State<ReviewsTab> {
           review.imageUrl = gameDetails.imageUrl;
         }
       } catch (e) {
+        // ignore: avoid_print
         print("Error fetching game details: $e");
       }
     }
