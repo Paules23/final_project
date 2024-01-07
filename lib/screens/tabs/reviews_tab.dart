@@ -11,9 +11,12 @@ class ReviewsTab extends StatefulWidget {
   State<ReviewsTab> createState() => _ReviewsTabState();
 }
 
-class _ReviewsTabState extends State<ReviewsTab> {
+class _ReviewsTabState extends State<ReviewsTab>
+    with AutomaticKeepAliveClientMixin {
   late Future<List<Review>> reviewsFuture;
 
+  @override
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
@@ -81,6 +84,7 @@ class _ReviewsTabState extends State<ReviewsTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder<List<Review>>(
       future: reviewsFuture,
       builder: (context, snapshot) {

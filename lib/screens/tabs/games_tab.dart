@@ -12,11 +12,14 @@ class GamesTab extends StatefulWidget {
   _GamesTabState createState() => _GamesTabState();
 }
 
-class _GamesTabState extends State<GamesTab> {
+class _GamesTabState extends State<GamesTab>
+    with AutomaticKeepAliveClientMixin {
   final List<GameDetails> _games = [];
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
 
+  @override
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
@@ -45,6 +48,7 @@ class _GamesTabState extends State<GamesTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     int crossAxisCount = MediaQuery.of(context).size.width ~/ 150;
     crossAxisCount = crossAxisCount > 0 ? crossAxisCount : 1;
 
