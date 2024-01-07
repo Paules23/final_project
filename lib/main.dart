@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => FavoritesProvider(),
       child: MaterialApp(
-        title: 'Your Application',
+        title: 'QuestLog',
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.blueGrey,
