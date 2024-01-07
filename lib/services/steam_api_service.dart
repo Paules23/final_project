@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:final_project/models/game_model.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiService {
   static const String apiKey = '37D9C03B00BDCD0B8CE03351101779AF';
@@ -21,7 +22,7 @@ class ApiService {
 
   static Future<GameDetails> fetchGameDetails(int gameId) async {
     final gameInfoEndpoint =
-        'https://store.steampowered.com/api/appdetails?appids=${gameId.toString()}&key=$apiKey';
+        'https://store.steampowered.com/api/appdetails?appids=${gameId.toString()}&key=yourAPIKey';
 
     final response = await http.get(Uri.parse(gameInfoEndpoint));
 
@@ -31,13 +32,18 @@ class ApiService {
         final gameData = data['$gameId']['data'];
         int steamAppId = gameData['steam_appid'] ?? -1;
 
+        String price = 'Price not available';
+        if (gameData['price_overview'] != null) {
+          price = gameData['price_overview']['final_formatted'] ??
+              'Price not available';
+        }
+
         return GameDetails(
           id: steamAppId,
           title: gameData['name'] ?? 'Title not available',
           description:
               gameData['short_description'] ?? 'Description not available',
-          price: gameData['price_overview']['final_formatted'] ??
-              'Price not available',
+          price: price,
           genre: _getGenres(gameData['genres']),
           developer:
               gameData['developers']?.join(', ') ?? 'Developer not available',
@@ -49,8 +55,12 @@ class ApiService {
         throw Exception('Failed to load game details for game ID $gameId');
       }
     } else {
-      throw Exception(
-          'Failed to load game details for game ID $gameId with status code ${response.statusCode}');
+      if (kDebugMode) {
+        print('Failed to fetch details for game ID $gameId. '
+            'Status code: ${response.statusCode}. '
+            'Response: ${response.body}');
+      }
+      throw Exception('Failed to load game details for game ID $gameId');
     }
   }
 
@@ -107,5 +117,31 @@ class ApiService {
       return genreList.join(', ');
     }
     return '';
+  }
+
+  static Future<List<GameDetails>> fetchRandomGames(int count) async {
+    try {
+      List<dynamic> allGames = await fetchSteamGames();
+      List<GameDetails> randomGames = [];
+
+      allGames.shuffle();
+      for (var i = 0; i < count && i < allGames.length; i++) {
+        try {
+          GameDetails details = await fetchGameDetails(allGames[i]['appid']);
+          randomGames.add(details);
+        } catch (fetchError) {
+          if (kDebugMode) {
+            print(
+                'Failed to fetch game details for ${allGames[i]['appid']}, Error: $fetchError');
+          }
+        }
+      }
+      return randomGames;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to fetch game list, Error: $e');
+      }
+      rethrow;
+    }
   }
 }

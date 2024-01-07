@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/services/steam_api_service.dart';
 import 'package:final_project/utils/preferences_util.dart';
@@ -22,8 +22,9 @@ class FavoritesProvider with ChangeNotifier {
     } catch (e) {
       _isError = true;
       _errorMessage = 'Failed to load favorites: $e';
-      // ignore: avoid_print
-      print(_errorMessage);
+      if (kDebugMode) {
+        print(_errorMessage);
+      }
     }
     notifyListeners();
   }
@@ -49,8 +50,10 @@ class FavoritesProvider with ChangeNotifier {
     } catch (e) {
       _isError = true;
       _errorMessage = 'Failed to add favorite: $e';
-      // ignore: avoid_print
-      print(_errorMessage);
+
+      if (kDebugMode) {
+        print(_errorMessage);
+      }
     }
     notifyListeners();
   }
@@ -70,8 +73,10 @@ class FavoritesProvider with ChangeNotifier {
     } catch (e) {
       _isError = true;
       _errorMessage = 'Failed to save favorites: $e';
-      // ignore: avoid_print
-      print(_errorMessage);
+
+      if (kDebugMode) {
+        print(_errorMessage);
+      }
     }
   }
 

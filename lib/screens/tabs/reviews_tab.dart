@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:final_project/models/review_model.dart';
 import 'package:final_project/widgets/review_card.dart';
 import 'package:final_project/services/steam_api_service.dart';
+import 'package:final_project/widgets/loading_indicator.dart';
 
 class ReviewsTab extends StatefulWidget {
   const ReviewsTab({Key? key}) : super(key: key);
@@ -84,7 +85,7 @@ class _ReviewsTabState extends State<ReviewsTab> {
       future: reviewsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const LoadingIndicator();
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

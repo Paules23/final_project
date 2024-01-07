@@ -4,6 +4,7 @@ import 'package:final_project/models/game_model.dart';
 import 'package:final_project/widgets/search_input_field.dart';
 import 'package:final_project/widgets/game_search_results.dart';
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -45,8 +46,9 @@ class _SearchScreenState extends State<SearchScreen> {
         _isSearching = false;
       });
     } catch (e) {
-      // ignore: avoid_print
-      print("Error searching for game: $e");
+      if (kDebugMode) {
+        print("Error searching for game: $e");
+      }
       setState(() {
         _featuredGames = Future.value([]);
         _isSearching = false;

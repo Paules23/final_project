@@ -4,6 +4,8 @@ import 'package:final_project/models/game_model.dart';
 import 'package:final_project/utils/favorites_provider.dart';
 import 'package:final_project/services/steam_api_service.dart';
 import 'package:final_project/widgets/game_collection_item.dart';
+import 'package:final_project/widgets/loading_indicator.dart';
+import 'package:flutter/foundation.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({Key? key}) : super(key: key);
@@ -37,8 +39,9 @@ class _CollectionScreenState extends State<CollectionScreen> {
             });
           }
         } catch (e) {
-          // ignore: avoid_print
-          print('Failed to load game details for ID $id: $e');
+          if (kDebugMode) {
+            print('Failed to load game details for ID $id: $e');
+          }
         }
       }
     }
@@ -87,7 +90,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
           if (details != null) {
             return GameCollectionItem(gameDetails: details);
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingIndicator();
           }
         },
       ),

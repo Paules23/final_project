@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:final_project/models/game_model.dart';
 import 'package:final_project/screens/game_screen.dart';
+import 'package:final_project/widgets/loading_indicator.dart';
 
 class GameSearchResults extends StatelessWidget {
   final Future<List<GameDetails>>? featuredGames;
@@ -19,7 +20,7 @@ class GameSearchResults extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting ||
             isSearching) {
-          return const Center(child: CircularProgressIndicator());
+          return const LoadingIndicator();
         } else if (snapshot.hasError) {
           return Center(child: Text("Error: ${snapshot.error}"));
         } else if (snapshot.hasData) {
